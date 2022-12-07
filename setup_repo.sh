@@ -17,17 +17,17 @@ done <${SETUP_CONF_PATH} # pass the setup config into the while loop
 
 # Auth setup
 
-COOKIE_SECRET=$(python3 -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())')
-OIDC_CLIENT_ID=$(python3 -c 'import secrets; print(secrets.token_hex(16))')
-OIDC_CLIENT_SECRET=$(python3 -c 'import secrets; print(secrets.token_hex(32))')
+COOKIE_SECRET=$(python -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(16)).decode())')
+OIDC_CLIENT_ID=$(python -c 'import secrets; print(secrets.token_hex(16))')
+OIDC_CLIENT_SECRET=$(python -c 'import secrets; print(secrets.token_hex(32))')
 
 kubectl create secret generic -n auth oauth2-proxy --from-literal=client-id=${OIDC_CLIENT_ID} --from-literal=client-secret=${OIDC_CLIENT_SECRET} --from-literal=cookie-secret=${COOKIE_SECRET} --dry-run=client -o yaml | kubeseal | yq eval -P > ${DISTRIBUTION_PATH}/oidc-auth/overlays/dex/oauth2-proxy-secret.yaml
 kubectl create secret generic -n auth oauth2-proxy --from-literal=client-id=${OIDC_CLIENT_ID} --from-literal=client-secret=${OIDC_CLIENT_SECRET} --from-literal=cookie-secret=${COOKIE_SECRET} --dry-run=client -o yaml | kubeseal | yq eval -P > ${DISTRIBUTION_PATH}/oidc-auth/overlays/keycloak/oauth2-proxy-secret.yaml
 
-DATABASE_PASS=$(python3 -c 'import secrets; print(secrets.token_hex(16))')
-POSTGRESQL_PASS=$(python3 -c 'import secrets; print(secrets.token_hex(16))')
-KEYCLOAK_ADMIN_PASS=$(python3 -c 'import secrets; print(secrets.token_hex(16))')
-KEYCLOAK_MANAGEMENT_PASS=$(python3 -c 'import secrets; print(secrets.token_hex(16))')
+DATABASE_PASS=$(python -c 'import secrets; print(secrets.token_hex(16))')
+POSTGRESQL_PASS=$(python -c 'import secrets; print(secrets.token_hex(16))')
+KEYCLOAK_ADMIN_PASS=$(python -c 'import secrets; print(secrets.token_hex(16))')
+KEYCLOAK_MANAGEMENT_PASS=$(python -c 'import secrets; print(secrets.token_hex(16))')
 
 kubectl create secret generic -n auth keycloak-secret --from-literal=admin-password=${KEYCLOAK_ADMIN_PASS} --from-literal=database-password=${DATABASE_PASS} --from-literal=management-password=${KEYCLOAK_MANAGEMENT_PASS} --dry-run=client -o yaml | kubeseal | yq eval -P > ${DISTRIBUTION_PATH}/oidc-auth/overlays/keycloak/keycloak-secret.yaml
 kubectl create secret generic -n auth keycloak-postgresql --from-literal=postgresql-password=${DATABASE_PASS} --from-literal=postgresql-postgres-password=${POSTGRESQL_PASS} --dry-run=client -o yaml | kubeseal | yq eval -P > ${DISTRIBUTION_PATH}/oidc-auth/overlays/keycloak/postgresql-secret.yaml
@@ -39,7 +39,7 @@ read -p 'Last name (for Kubeflow account): ' LASTNAME
 echo 'Password (for Kubeflow login):'
 read -s ADMIN_PASS
 
-ADMIN_PASS_DEX=$(python3 -c "from passlib.hash import bcrypt; import secrets; print(bcrypt.using(rounds=12, ident='2y').hash(\"${ADMIN_PASS}\"))")
+ADMIN_PASS_DEX=$(python -c "from passlib.hash import bcrypt; import secrets; print(bcrypt.using(rounds=12, ident='2y').hash(\"${ADMIN_PASS}\"))")
 
 yq eval -i ".data.ADMIN = \"${EMAIL}\"" ${DISTRIBUTION_PATH}/kubeflow/notebooks/profile-controller_access-management/patch-admin.yaml
 
