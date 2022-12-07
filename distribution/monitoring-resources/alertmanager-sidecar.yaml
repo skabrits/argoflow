@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Sidecar
 metadata:
-  namespace: monitoring
+  namespace: perform-system
   name: alertmanager
 spec:
   workloadSelector:

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nvidia-dcgm-exporter
-  namespace: monitoring
+  namespace: perform-system
   labels:
     grafana_dashboard:  "nvidia-dcgm-exporter-dashboard"
 data:

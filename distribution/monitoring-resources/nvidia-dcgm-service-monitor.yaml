@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: nvidia-dcgm-exporter
-  namespace: monitoring
+  namespace: perform-system
   labels:
     app: nvidia-dcgm-exporter
 spec:
